@@ -3,32 +3,30 @@
 import { useState, useEffect, useRef } from "react";
 
 const CM_MEASUREMENTS: Record<string, Record<string, number>> = {
-  XS: { chest: 88, length: 67, shoulder: 42, sleeve: 59 },
-  S:  { chest: 92, length: 69, shoulder: 44, sleeve: 60 },
-  M:  { chest: 96, length: 71, shoulder: 46, sleeve: 61 },
-  L:  { chest: 100, length: 73, shoulder: 48, sleeve: 62 },
-  XL: { chest: 104, length: 75, shoulder: 50, sleeve: 63 },
-  XXL:{ chest: 108, length: 77, shoulder: 52, sleeve: 64 },
+  S:  { chest: 92, length: 68, shoulder: 42, sleeve: 60 },
+  M:  { chest: 98, length: 71, shoulder: 44, sleeve: 61 },
+  L:  { chest: 104, length: 74, shoulder: 46, sleeve: 62 },
+  XL: { chest: 110, length: 77, shoulder: 48, sleeve: 63 },
 };
 
 const SIZE_CONV_ROWS = [
-  { label: "International", values: ["XS","S","M","L","XL","XXL"] },
-  { label: "AU / US",       values: ["4","6","8","10","12","14"] },
-  { label: "EU",            values: ["34","36","38","40","42","44"] },
-  { label: "UK",            values: ["6","8","10","12","14","16"] },
-  { label: "Japan",         values: ["5","7","9","11","13","15"] },
+  { label: "International", values: ["S","M","L","XL"] },
+  { label: "AU / US",       values: ["6","8","10","12"] },
+  { label: "EU",            values: ["36","38","40","42"] },
+  { label: "UK",            values: ["8","10","12","14"] },
+  { label: "Japan",         values: ["7","9","11","13"] },
 ];
 
-const SIZES = ["XS","S","M","L","XL","XXL"];
+const SIZES = ["S","M","L","XL"];
 
 const FIT_BRANDS: Record<string, Record<string, string>> = {
-  "Supreme":  { XS:"XS", S:"S",  M:"M",  L:"L",  XL:"XL",  XXL:"XXL" },
-  "Nike":     { XS:"XS", S:"S",  M:"M",  L:"L",  XL:"XL",  XXL:"XXL" },
-  "Zara":     { XS:"XS", S:"S",  M:"M",  L:"L",  XL:"XL",  XXL:"XXL" },
-  "H&M":      { XS:"XS", S:"S",  M:"M",  L:"L",  XL:"XL",  XXL:"XXL" },
-  "Uniqlo":   { XS:"S",  S:"M",  M:"L",  L:"XL", XL:"XXL", XXL:"XXL" },
-  "ASOS":     { XS:"XS", S:"S",  M:"M",  L:"L",  XL:"XL",  XXL:"XXL" },
-  "Acne Studios": { XS:"XS", S:"S", M:"M", L:"L", XL:"XL", XXL:"XXL" },
+  "Supreme":  { S:"S", M:"M", L:"L", XL:"XL" },
+  "Nike":     { S:"S", M:"M", L:"L", XL:"XL" },
+  "Zara":     { S:"S", M:"M", L:"L", XL:"XL" },
+  "H&M":      { S:"S", M:"M", L:"L", XL:"XL" },
+  "Uniqlo":   { S:"M", M:"L", L:"XL", XL:"XL" },
+  "ASOS":     { S:"S", M:"M", L:"L", XL:"XL" },
+  "Acne Studios": { S:"S", M:"M", L:"L", XL:"XL" },
 };
 
 function cm2in(v: number) { return (v / 2.54).toFixed(1); }

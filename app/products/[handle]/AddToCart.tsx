@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useTransition } from "react";
+import SizeGuideModal from "@/components/SizeGuideModal";
 import { useCart } from "@/context/CartContext";
 import type { ShopifyProduct, ShopifyVariant } from "@/types/shopify";
-import SizeGuideModal from "@/components/SizeGuideModal";
 
 interface AddToCartProps {
   product: ShopifyProduct;

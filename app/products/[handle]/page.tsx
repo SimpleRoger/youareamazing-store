@@ -127,7 +127,7 @@ export default async function ProductPage({ params }: Props) {
               </h2>
               <div
                 className="text-sm text-gray-700 leading-relaxed prose prose-sm max-w-none mb-4"
-                dangerouslySetInnerHTML={{ __html: product.descriptionHtml }}
+                dangerouslySetInnerHTML={{ __html: product.descriptionHtml.replace(/<table[\s\S]*?<\/table>/gi, "") }}
               />
               {SIZE_CHARTS[handle] && (
                 <div className="overflow-x-auto mt-4">
