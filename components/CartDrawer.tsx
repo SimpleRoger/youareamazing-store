@@ -248,7 +248,7 @@ export default function CartDrawer() {
             </div>
             <p className="text-xs text-gray-500 text-center">Shipping and taxes calculated at checkout</p>
             <button
-              onClick={() => { closeCart(); proceedToCheckout(); }}
+              onClick={() => proceedToCheckout()}
               className="block w-full bg-black text-white text-sm font-medium text-center uppercase tracking-wider py-4 hover:bg-gray-900 transition-colors"
             >
               Proceed to Checkout
