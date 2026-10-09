@@ -98,8 +98,8 @@ export default function CollectionPage({ products, title = "All Products" }: Pro
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-3 gap-y-12">
-          {sorted.map((product) => (
-            <ProductCard key={product.id} product={product} />
+          {sorted.map((product, i) => (
+            <ProductCard key={product.id} product={product} priority={i < 5} />
           ))}
         </div>
       )}

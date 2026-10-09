@@ -9,11 +9,15 @@ import { useCart } from "@/context/CartContext";
 
 interface ProductCardProps {
   product: ShopifyProduct;
+  priority?: boolean;
 }
 
-export default function ProductCard({ product }: ProductCardProps) {
+export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
+  const defaultVariant = variants.find(v =>
+    v.selectedOptions.some(o => o.name.toLowerCase() === "color" && o.value.toLowerCase() === "white")
+  ) ?? variants[0];
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(defaultVariant?.id ?? null);
   const [added, setAdded] = useState(false);
 
   const allImages = product.images.edges;
@@ -56,9 +60,9 @@ export default function ProductCard({ product }: ProductCardProps) {
   }
 
   function getVariantForSize(size: string) {
-    return variants.find(v =>
-      v.selectedOptions.some(o => o.value === size)
-    );
+    const matching = variants.filter(v => v.selectedOptions.some(o => o.value === size));
+    return matching.find(v => v.selectedOptions.some(o => o.name.toLowerCase() === "color" && o.value.toLowerCase() === "white"))
+      ?? matching[0];
   }
 
   function handleAddToCart(e: React.MouseEvent) {
@@ -96,6 +100,8 @@ export default function ProductCard({ product }: ProductCardProps) {
               <img
                 src={imgSrc}
                 alt={shopifyImage.altText ?? product.title}
+                loading={priority ? "eager" : "lazy"}
+                fetchPriority={priority ? "high" : "auto"}
                 onError={() => {
                   if (!imgFallbackUsed) {
                     setImgFallbackUsed(true);
