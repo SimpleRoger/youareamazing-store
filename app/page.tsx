@@ -1,6 +1,8 @@
 import { getAllProducts } from "@/lib/shopify";
 import CollectionPage from "@/components/CollectionPage";
 
+export const dynamic = "force-dynamic";
+
 const HIDDEN_HANDLES = ["live-love-pyjammas"];
 
 export default async function HomePage() {

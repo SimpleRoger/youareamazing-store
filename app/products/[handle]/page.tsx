@@ -4,6 +4,8 @@ import { getProductByHandle, formatPrice } from "@/lib/shopify";
 import AddToCart from "./AddToCart";
 import ImageGallery from "./ImageGallery";
 
+export const dynamic = "force-dynamic";
+
 const SIZE_CHARTS: Record<string, { cols: string[]; rows: string[][] }> = {
   "skinny-jeans": {
     cols: ["Size", "Waist", "Hip", "Inseam", "Height"],

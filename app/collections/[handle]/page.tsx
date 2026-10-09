@@ -1,6 +1,8 @@
 import { getCollectionByHandle, getAllProducts } from "@/lib/shopify";
 import CollectionPage from "@/components/CollectionPage";
 
+export const dynamic = "force-dynamic";
+
 const HIDDEN_HANDLES = ["live-love-pyjammas"];
 
 // Manual category map — add product handles here as you add products
