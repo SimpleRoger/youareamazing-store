@@ -16,7 +16,7 @@ async function getShopId(): Promise<string | null> {
       method: "POST",
       headers: { "Content-Type": "application/json", "X-Shopify-Storefront-Access-Token": token },
       body: JSON.stringify({ query: "{ shop { id } }" }),
-      cache: "no-store",
+      next: { revalidate: 86400 }, // cache 24h — shop ID never changes
     });
     const json = await res.json();
     return json?.data?.shop?.id ?? null;
@@ -42,6 +42,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const shopId = await getShopId();
+  const storefrontToken = process.env.SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_ACCESS_TOKEN ?? "";
 
   return (
     <html lang="en" className={inter.variable}>
@@ -55,11 +56,11 @@ export default async function RootLayout({
         {shopId && (
           <>
             <Script id="shopify-inbox-config" strategy="afterInteractive">
-              {`window.shopifyInboxConfig = { shopId: '${shopId}' };`}
+              {`window.shopifyInboxConfig = { shopId: '${shopId}', storefrontAccessToken: '${storefrontToken}' };`}
             </Script>
             <Script
               src="https://cdn.shopify.com/shopifycloud/chat/latest/storefront-chat.js"
-              strategy="lazyOnload"
+              strategy="afterInteractive"
             />
           </>
         )}

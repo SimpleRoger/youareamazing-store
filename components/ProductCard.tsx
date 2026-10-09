@@ -20,12 +20,12 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   // Use locally processed (background-removed) images when available
   // image-2.png = background-removed product flat shot (2nd Shopify image)
   // image-1.png = background-removed model shot (1st Shopify image) — we don't use this
-  const localPrimary = `/products/${product.handle}/image-2.png`;
+  const localPrimary = `/products/${product.handle}/image-2.webp`;
   const shopifyFallback = allImages[1]?.node ?? allImages[0]?.node; // product flat shot
   const shopifyImage = shopifyFallback;
   const shopifySecond = allImages[0]?.node; // model photo — shown on hover, original (no bg removal)
 
-  const localImage1 = `/products/${product.handle}/image-1.png`;
+  const localImage1 = `/products/${product.handle}/image-1.webp`;
   const [imgSrc, setImgSrc] = useState(localPrimary);
   const [imgFallbackUsed, setImgFallbackUsed] = useState(false);
   const [isShopifyFallback, setIsShopifyFallback] = useState(false);

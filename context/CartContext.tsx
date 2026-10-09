@@ -88,14 +88,20 @@ export function CartProvider({ children }: { children: ReactNode }) {
 
   const proceedToCheckout = useCallback(async () => {
     if (items.length === 0) return;
-    const res = await fetch("/api/checkout", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ items: items.map(i => ({ variantId: i.variantId, quantity: i.quantity })) }),
-    });
-    const json = await res.json();
-    if (json.url) {
-      window.location.href = json.url;
+    try {
+      const res = await fetch("/api/checkout", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ items: items.map(i => ({ variantId: i.variantId, quantity: i.quantity })) }),
+      });
+      const json = await res.json();
+      if (json.url) {
+        window.location.href = json.url;
+      } else {
+        alert("Checkout error: " + (json.error ?? "no URL returned"));
+      }
+    } catch (e: any) {
+      alert("Checkout error: " + e.message);
     }
   }, [items]);
 
