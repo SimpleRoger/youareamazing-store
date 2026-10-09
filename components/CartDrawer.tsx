@@ -94,7 +94,7 @@ function VariantEditor({ item, onSwap, onClose }: {
               {values.map((val: string) => {
                 const testSels = { ...selections, [opt.name]: val };
                 const variant = product.variants.edges.find((e: any) =>
-                  e.node.selectedOptions.every((o: any) => testSels[o.name] === o.value)
+                  e.node.selectedOptions.every((o: any) => (testSels as Record<string, string>)[o.name] === o.value)
                 )?.node;
                 const avail = variant?.availableForSale ?? false;
                 const isSel = selections[opt.name] === val;

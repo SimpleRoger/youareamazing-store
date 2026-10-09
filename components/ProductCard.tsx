@@ -75,7 +75,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       title: product.title,
       variantTitle: variant.title !== "Default Title" ? variant.title : "",
       price: variant.price,
-      image: shopifyImage ? { url: shopifyImage.url, altText: shopifyImage.altText ?? product.title } : undefined,
+      image: shopifyImage ? { url: shopifyImage.url, altText: shopifyImage.altText ?? product.title } : null,
       quantity: 1,
     });
 
