@@ -15,7 +15,7 @@ interface ShopifyFetchOptions {
 async function shopifyFetch<T>({
   query,
   variables,
-  cache = "force-cache",
+  cache = "no-store",
   tags,
 }: ShopifyFetchOptions): Promise<T> {
   const response = await fetch(SHOPIFY_API_ENDPOINT, {
