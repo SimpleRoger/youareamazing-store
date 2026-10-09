@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { getCollectionByHandle, getAllProducts } from "@/lib/shopify";
 import CollectionPage from "@/components/CollectionPage";
 
@@ -37,7 +38,7 @@ export default async function CollectionRoute({ params }: Props) {
 
   if (collection) {
     const products = collection.products.edges.map((e) => e.node).filter(p => !HIDDEN_HANDLES.includes(p.handle));
-    return <CollectionPage products={products} title={collection.title} />;
+    return <Suspense><CollectionPage products={products} title={collection.title} /></Suspense>;
   }
 
   // Use manual category map if available
@@ -47,7 +48,7 @@ export default async function CollectionRoute({ params }: Props) {
 
   if (mappedHandles) {
     const filtered = allProducts.filter(p => mappedHandles.includes(p.handle));
-    return <CollectionPage products={filtered} title={title} />;
+    return <Suspense><CollectionPage products={filtered} title={title} /></Suspense>;
   }
 
   // Last resort: tag/title keyword match
@@ -57,9 +58,11 @@ export default async function CollectionRoute({ params }: Props) {
     p.title.toLowerCase().includes(keyword)
   );
   return (
-    <CollectionPage
-      products={filtered.length > 0 ? filtered : allProducts}
-      title={title}
-    />
+    <Suspense>
+      <CollectionPage
+        products={filtered.length > 0 ? filtered : allProducts}
+        title={title}
+      />
+    </Suspense>
   );
 }
