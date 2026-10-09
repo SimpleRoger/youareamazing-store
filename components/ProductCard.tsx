@@ -121,7 +121,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
                     setImgBroken(true);
                   }
                 }}
-                className={`absolute transition-opacity duration-500 ${shopifySecond ? "group-hover:opacity-0" : ""} ${isShopifyFallback ? "inset-0 w-full h-full object-cover object-top" : "inset-0 w-full h-full object-contain"}`}
+                className={`absolute transition-opacity duration-500 ${shopifySecond ? "group-hover:opacity-0" : ""} ${isShopifyFallback ? "inset-0 w-full h-full object-cover object-top" : "inset-4 w-[calc(100%-2rem)] h-[calc(100%-2rem)] object-contain"}`}
               />
               {shopifySecond && (
                 // eslint-disable-next-line @next/next/no-img-element
