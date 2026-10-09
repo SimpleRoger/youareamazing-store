@@ -48,6 +48,13 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   ) ?? variants[0];
   const [selectedVariantId, setSelectedVariantId] = useState<string | null>(defaultVariant?.id ?? null);
 
+  const SIZE_ORDER = ["XS","S","M","L","XL","XXL","One Size"];
+  function sizeRank(size: string) {
+    const abbr = abbrevSize(size);
+    const idx = SIZE_ORDER.indexOf(abbr);
+    return idx === -1 ? 99 : idx;
+  }
+
   function abbrevSize(size: string) {
     const map: Record<string, string> = {
       "xs": "XS", "xsmall": "XS", "x-small": "XS", "extra small": "XS",
@@ -148,7 +155,7 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
       <div className="mt-auto">
       <div className="flex flex-wrap gap-1 mb-2">
       {!hasOneVariant && sizeOption ? (
-        sizeOption.values.map(size => {
+        [...sizeOption.values].sort((a, b) => sizeRank(a) - sizeRank(b)).map(size => {
             const variant = getVariantForSize(size);
             const available = variant?.availableForSale ?? false;
             const isSelected = selectedVariantId === variant?.id;
