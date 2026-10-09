@@ -33,8 +33,20 @@ export async function POST(req: Request) {
   const errs = json?.data?.cartCreate?.userErrors;
   if (errs?.length) return NextResponse.json({ error: errs[0].message }, { status: 400 });
 
-  const checkoutUrl = json?.data?.cartCreate?.cart?.checkoutUrl;
+  let checkoutUrl: string = json?.data?.cartCreate?.cart?.checkoutUrl;
   if (!checkoutUrl) return NextResponse.json({ error: "No checkout URL" }, { status: 500 });
+
+  // Shopify returns checkoutUrl using the store's primary domain (custom domain).
+  // If it points back to this app, replace it with the myshopify.com domain so the
+  // browser goes directly to Shopify's checkout and doesn't hit Next.js's /cart page.
+  const myshopifyDomain = process.env.SHOPIFY_MYSHOPIFY_DOMAIN ?? DOMAIN;
+  try {
+    const u = new URL(checkoutUrl);
+    if (!u.hostname.endsWith(".myshopify.com")) {
+      u.hostname = myshopifyDomain;
+      checkoutUrl = u.toString();
+    }
+  } catch {}
 
   return NextResponse.json({ url: checkoutUrl });
 }
