@@ -14,10 +14,6 @@ interface ProductCardProps {
 
 export default function ProductCard({ product, priority = false }: ProductCardProps) {
   const { addItem } = useCart();
-  const defaultVariant = variants.find(v =>
-    v.selectedOptions.some(o => o.name.toLowerCase() === "color" && o.value.toLowerCase() === "white")
-  ) ?? variants[0];
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(defaultVariant?.id ?? null);
   const [added, setAdded] = useState(false);
 
   const allImages = product.images.edges;
@@ -46,6 +42,11 @@ export default function ProductCard({ product, priority = false }: ProductCardPr
   );
 
   const variants = product.variants.edges.map(e => e.node);
+
+  const defaultVariant = variants.find(v =>
+    v.selectedOptions.some(o => o.name.toLowerCase() === "color" && o.value.toLowerCase() === "white")
+  ) ?? variants[0];
+  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(defaultVariant?.id ?? null);
 
   function abbrevSize(size: string) {
     const map: Record<string, string> = {

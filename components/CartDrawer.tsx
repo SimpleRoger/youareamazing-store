@@ -134,7 +134,7 @@ function VariantEditor({ item, onSwap, onClose }: {
 }
 
 export default function CartDrawer() {
-  const { items, isOpen, closeCart, removeItem, updateQuantity, addItem, subtotal, itemCount } = useCart();
+  const { items, isOpen, closeCart, removeItem, updateQuantity, addItem, subtotal, itemCount, proceedToCheckout } = useCart();
   const [editingId, setEditingId] = useState<string | null>(null);
 
   function handleSwap(oldItem: CartItem, newVariantId: string, newTitle: string, newPrice: CartItem["price"]) {
@@ -247,7 +247,13 @@ export default function CartDrawer() {
               <span>{subtotal}</span>
             </div>
             <p className="text-xs text-gray-500 text-center">Shipping and taxes calculated at checkout</p>
-            <Link href="/cart" onClick={closeCart} className="block w-full bg-black text-white text-sm font-medium text-center uppercase tracking-wider py-4 hover:bg-gray-900 transition-colors">
+            <button
+              onClick={() => { closeCart(); proceedToCheckout(); }}
+              className="block w-full bg-black text-white text-sm font-medium text-center uppercase tracking-wider py-4 hover:bg-gray-900 transition-colors"
+            >
+              Proceed to Checkout
+            </button>
+            <Link href="/cart" onClick={closeCart} className="block w-full text-center text-xs uppercase tracking-wider text-gray-500 hover:text-black underline underline-offset-2 transition-colors py-1">
               View Cart
             </Link>
           </div>

@@ -6,7 +6,7 @@ import { useCart } from "@/context/CartContext";
 import { X, Minus, Plus } from "@/components/Icons";
 
 export default function CartPage() {
-  const { items, removeItem, updateQuantity, subtotal, clearCart } = useCart();
+  const { items, removeItem, updateQuantity, subtotal, clearCart, proceedToCheckout } = useCart();
 
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
@@ -161,7 +161,10 @@ export default function CartPage() {
               🛍️ Buy 2+ items = 10% off · Buy 3+ = 15% off
             </p>
 
-            <button className="w-full bg-black text-white text-sm font-medium uppercase tracking-widest py-4 hover:bg-gray-900 transition-colors">
+            <button
+              onClick={proceedToCheckout}
+              className="w-full bg-black text-white text-sm font-medium uppercase tracking-widest py-4 hover:bg-gray-900 transition-colors"
+            >
               Proceed to Checkout
             </button>
 

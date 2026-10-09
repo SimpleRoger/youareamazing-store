@@ -21,6 +21,7 @@ interface CartContextValue {
   clearCart: () => void;
   openCart: () => void;
   closeCart: () => void;
+  proceedToCheckout: () => Promise<void>;
 }
 
 const CartContext = createContext<CartContextValue | null>(null);
@@ -85,6 +86,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const openCart = useCallback(() => setIsOpen(true), []);
   const closeCart = useCallback(() => setIsOpen(false), []);
 
+  const proceedToCheckout = useCallback(async () => {
+    if (items.length === 0) return;
+    const res = await fetch("/api/checkout", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ items: items.map(i => ({ variantId: i.variantId, quantity: i.quantity })) }),
+    });
+    const json = await res.json();
+    if (json.url) {
+      window.location.href = json.url;
+    }
+  }, [items]);
+
   const itemCount = items.reduce((sum, i) => sum + i.quantity, 0);
 
   const subtotalNum = items.reduce(
@@ -112,6 +126,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         clearCart,
         openCart,
         closeCart,
+        proceedToCheckout,
       }}
     >
       {children}
