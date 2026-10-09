@@ -253,9 +253,6 @@ export default function CartDrawer() {
             >
               Proceed to Checkout
             </button>
-            <Link href="/cart" onClick={closeCart} className="block w-full text-center text-xs uppercase tracking-wider text-gray-500 hover:text-black underline underline-offset-2 transition-colors py-1">
-              View Cart
-            </Link>
           </div>
         )}
       </div>
