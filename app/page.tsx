@@ -7,15 +7,14 @@ export const dynamic = "force-dynamic";
 const HIDDEN_HANDLES = ["live-love-pyjammas"];
 
 export default async function HomePage() {
-  let products;
+  let products: Awaited<ReturnType<typeof getAllProducts>> = [];
   let errorMsg = "";
   try {
     products = await getAllProducts(100);
   } catch (e: any) {
     errorMsg = e?.message ?? String(e);
-    products = [];
   }
-  const visible = (products ?? []).filter((p: any) => !HIDDEN_HANDLES.includes(p.handle));
+  const visible = products.filter(p => !HIDDEN_HANDLES.includes(p.handle));
   if (errorMsg) {
     return (
       <div className="max-w-2xl mx-auto px-4 py-24 text-center">
