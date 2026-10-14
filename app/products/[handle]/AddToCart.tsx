@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import SizeGuideModal from "@/components/SizeGuideModal";
+import SizeGuideModal, { detectCategory } from "@/components/SizeGuideModal";
 import { useCart } from "@/context/CartContext";
 import type { ShopifyProduct, ShopifyVariant } from "@/types/shopify";
 
@@ -85,6 +85,7 @@ export default function AddToCart({ product }: AddToCartProps) {
         open={sizeGuideOpen}
         onClose={() => setSizeGuideOpen(false)}
         defaultSize={currentSize}
+        productCategory={detectCategory(product.handle, product.tags)}
       />
 
       {product.options.map(option => {
