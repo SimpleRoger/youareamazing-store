@@ -4,13 +4,14 @@ import { useState, useEffect, useRef } from "react";
 
 // ── Product categories ────────────────────────────────────────────────────────
 
-export type ProductCategory = "tops" | "bottoms" | "hats" | "underwear";
+export type ProductCategory = "tops" | "bottoms" | "hats" | "underwear" | "outerwear";
 
 export function detectCategory(handle: string, tags: string[]): ProductCategory {
   const all = [handle, ...tags].join(" ").toLowerCase();
   if (/pant|short|jogger|trouser|bottom/.test(all)) return "bottoms";
   if (/hat|cap|beanie|bucket/.test(all)) return "hats";
   if (/underwear|boxer|brief|trunk/.test(all)) return "underwear";
+  if (/jacket|coat|hoodie|zip.?up|cardigan|blazer|outerwear|puffer|windbreaker|fur/.test(all)) return "outerwear";
   return "tops";
 }
 
@@ -28,6 +29,13 @@ const TOPS_CM: Record<string, Record<TopsKey, number>> = {
   M:  { chest: 98,  length: 71, shoulder: 44, sleeve: 61 },
   L:  { chest: 104, length: 74, shoulder: 46, sleeve: 62 },
   XL: { chest: 110, length: 77, shoulder: 48, sleeve: 63 },
+};
+
+const OUTERWEAR_CM: Record<string, Record<TopsKey, number>> = {
+  S:  { chest: 98,  length: 72, shoulder: 44, sleeve: 63 },
+  M:  { chest: 104, length: 75, shoulder: 46, sleeve: 64 },
+  L:  { chest: 110, length: 78, shoulder: 48, sleeve: 65 },
+  XL: { chest: 116, length: 81, shoulder: 50, sleeve: 66 },
 };
 
 const BOTTOMS_CM: Record<string, Record<BottomsKey, number>> = {
@@ -58,6 +66,13 @@ const SIZE_CONV: Record<ProductCategory, { label: string; values: string[] }[]> 
     { label: "EU",            values: ["36","38","40","42"] },
     { label: "UK",            values: ["8","10","12","14"] },
     { label: "Japan",         values: ["7","9","11","13"] },
+  ],
+  outerwear: [
+    { label: "International", values: ["S","M","L","XL"] },
+    { label: "AU / US",       values: ["8","10","12","14"] },
+    { label: "EU",            values: ["38","40","42","44"] },
+    { label: "UK",            values: ["10","12","14","16"] },
+    { label: "Japan",         values: ["9","11","13","15"] },
   ],
   bottoms: [
     { label: "International", values: ["S","M","L","XL"] },
@@ -153,51 +168,118 @@ function BottomsDiagram({ size, unit, hovered, setHovered }: DiagramProps) {
 
   return (
     <div className="relative select-none">
-      <svg viewBox="0 0 300 310" className="w-full max-w-[260px] mx-auto" fill="none">
-        {/* Pants outline */}
-        <path d="M 60,20 L 240,20 L 250,160 L 200,160 L 150,100 L 100,160 L 50,160 Z"
+      <svg viewBox="0 0 300 320" className="w-full max-w-[260px] mx-auto" fill="none">
+        {/* Pants outline — two legs joined at waist, smooth crotch curve */}
+        <path d="M 72,22 L 228,22 Q 252,75 252,115 L 252,295 L 185,295 L 185,158 Q 150,185 115,158 L 115,295 L 48,295 L 48,115 Q 48,75 72,22 Z"
           stroke="#ccc" strokeWidth="1.5" fill="white" />
-        <path d="M 50,160 L 100,160 L 110,295 L 55,295 Z" stroke="#ccc" strokeWidth="1.5" fill="white" />
-        <path d="M 200,160 L 250,160 L 245,295 L 190,295 Z" stroke="#ccc" strokeWidth="1.5" fill="white" />
 
         {/* WAIST */}
         <g className="cursor-pointer" onMouseEnter={() => setHovered("waist")} onMouseLeave={() => setHovered(null)}>
-          <line x1="60" y1="20" x2="240" y2="20" stroke={col("waist")} strokeWidth={w("waist")} markerEnd="url(#arrb)" markerStart="url(#arrb)" />
-          <rect x="100" y="8" width="100" height="16" fill="white" />
-          <text x="150" y="19" textAnchor="middle" fontSize="9" fill={col("waist")} fontFamily="sans-serif" fontWeight={hovered==="waist" ? "600" : "400"}>
+          <line x1="72" y1="22" x2="228" y2="22" stroke={col("waist")} strokeWidth={w("waist")} markerEnd="url(#arrb)" markerStart="url(#arrb)" />
+          <rect x="102" y="10" width="96" height="16" fill="white" />
+          <text x="150" y="21" textAnchor="middle" fontSize="9" fill={col("waist")} fontFamily="sans-serif" fontWeight={hovered==="waist" ? "600" : "400"}>
             WAIST {hovered==="waist" ? `· ${fmt(m.waist)}` : "?"}
           </text>
         </g>
 
         {/* HIP */}
         <g className="cursor-pointer" onMouseEnter={() => setHovered("hip")} onMouseLeave={() => setHovered(null)}>
-          <line x1="52" y1="100" x2="248" y2="100" stroke={col("hip")} strokeWidth={w("hip")} markerEnd="url(#arrb)" markerStart="url(#arrb)" />
-          <rect x="100" y="88" width="100" height="16" fill="white" />
-          <text x="150" y="99" textAnchor="middle" fontSize="9" fill={col("hip")} fontFamily="sans-serif" fontWeight={hovered==="hip" ? "600" : "400"}>
+          <line x1="48" y1="115" x2="252" y2="115" stroke={col("hip")} strokeWidth={w("hip")} markerEnd="url(#arrb)" markerStart="url(#arrb)" />
+          <rect x="102" y="103" width="96" height="16" fill="white" />
+          <text x="150" y="114" textAnchor="middle" fontSize="9" fill={col("hip")} fontFamily="sans-serif" fontWeight={hovered==="hip" ? "600" : "400"}>
             HIP {hovered==="hip" ? `· ${fmt(m.hip)}` : "?"}
           </text>
         </g>
 
-        {/* INSEAM */}
+        {/* INSEAM — dashed from crotch to hem between legs */}
         <g className="cursor-pointer" onMouseEnter={() => setHovered("inseam")} onMouseLeave={() => setHovered(null)}>
-          <line x1="150" y1="125" x2="150" y2="295" stroke={col("inseam")} strokeWidth={w("inseam")} markerEnd="url(#arrb)" markerStart="url(#arrb)" strokeDasharray="4 2" />
-          <rect x="105" y="196" width="90" height="16" fill="white" />
-          <text x="150" y="207" textAnchor="middle" fontSize="9" fill={col("inseam")} fontFamily="sans-serif" fontWeight={hovered==="inseam" ? "600" : "400"}>
+          <line x1="150" y1="174" x2="150" y2="295" stroke={col("inseam")} strokeWidth={w("inseam")} markerEnd="url(#arrb)" markerStart="url(#arrb)" strokeDasharray="4 2" />
+          <rect x="108" y="218" width="84" height="16" fill="white" />
+          <text x="150" y="229" textAnchor="middle" fontSize="9" fill={col("inseam")} fontFamily="sans-serif" fontWeight={hovered==="inseam" ? "600" : "400"}>
             INSEAM {hovered==="inseam" ? `· ${fmt(m.inseam)}` : "?"}
           </text>
         </g>
 
         {/* LENGTH */}
         <g className="cursor-pointer" onMouseEnter={() => setHovered("length")} onMouseLeave={() => setHovered(null)}>
-          <line x1="28" y1="20" x2="28" y2="295" stroke={col("length")} strokeWidth={w("length")} markerEnd="url(#arrb)" markerStart="url(#arrb)" />
-          <rect x="0" y="148" width="56" height="16" fill="white" />
-          <text x="28" y="159" textAnchor="middle" fontSize="9" fill={col("length")} fontFamily="sans-serif" fontWeight={hovered==="length" ? "600" : "400"}>
+          <line x1="25" y1="22" x2="25" y2="295" stroke={col("length")} strokeWidth={w("length")} markerEnd="url(#arrb)" markerStart="url(#arrb)" />
+          <rect x="0" y="148" width="50" height="16" fill="white" />
+          <text x="25" y="159" textAnchor="middle" fontSize="9" fill={col("length")} fontFamily="sans-serif" fontWeight={hovered==="length" ? "600" : "400"}>
             {hovered==="length" ? fmt(m.length) : "LENGTH ?"}
           </text>
         </g>
 
         <defs>
           <marker id="arrb" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M0,0 L0,6 L6,3 Z" fill="#999" />
+          </marker>
+        </defs>
+      </svg>
+      <p className="text-center text-[10px] text-gray-400 uppercase tracking-widest mt-1">Measured flat across garment</p>
+    </div>
+  );
+}
+
+function OuterwearDiagram({ size, unit, hovered, setHovered }: DiagramProps) {
+  const m = OUTERWEAR_CM[size] ?? OUTERWEAR_CM["M"];
+  const fmt = (v: number) => unit === "cm" ? `${v} CM` : `${cm2in(v)}"`;
+  const col = (k: MeasurementKey) => hovered === k ? "#000" : "#999";
+  const w   = (k: MeasurementKey) => hovered === k ? 1.5 : 1;
+
+  return (
+    <div className="relative select-none">
+      <svg viewBox="0 0 300 290" className="w-full max-w-[280px] mx-auto" fill="none">
+        {/* Hood */}
+        <path d="M 112,24 Q 150,4 188,24 Q 168,42 132,42 Q 120,42 112,24 Z"
+          stroke="#ccc" strokeWidth="1.5" fill="#f0f0f0" />
+        {/* Jacket body with dropped shoulders and cuffs */}
+        <path d="M 112,24 C 96,28 84,44 82,65 L 28,80 L 8,142 L 50,154 L 58,110 L 58,262 L 242,262 L 242,110 L 250,154 L 292,142 L 272,80 L 218,65 C 216,44 204,28 188,24 Q 168,42 132,42 Q 120,42 112,24 Z"
+          stroke="#ccc" strokeWidth="1.5" fill="white" />
+        {/* Center zip line */}
+        <line x1="150" y1="42" x2="150" y2="262" stroke="#e0e0e0" strokeWidth="1" strokeDasharray="4 3" />
+        {/* Cuff lines — left sleeve */}
+        <line x1="8" y1="142" x2="50" y2="154" stroke="#ddd" strokeWidth="1" />
+        {/* Cuff lines — right sleeve */}
+        <line x1="250" y1="154" x2="292" y2="142" stroke="#ddd" strokeWidth="1" />
+
+        {/* SHOULDER */}
+        <g className="cursor-pointer" onMouseEnter={() => setHovered("shoulder")} onMouseLeave={() => setHovered(null)}>
+          <line x1="82" y1="65" x2="218" y2="65" stroke={col("shoulder")} strokeWidth={w("shoulder")} markerEnd="url(#arro)" markerStart="url(#arro)" />
+          <rect x="105" y="53" width="90" height="16" fill="white" />
+          <text x="150" y="64" textAnchor="middle" fontSize="9" fill={col("shoulder")} fontFamily="sans-serif" fontWeight={hovered==="shoulder" ? "600" : "400"}>
+            SHOULDER {hovered==="shoulder" ? `· ${fmt(m.shoulder)}` : "?"}
+          </text>
+        </g>
+
+        {/* CHEST */}
+        <g className="cursor-pointer" onMouseEnter={() => setHovered("chest")} onMouseLeave={() => setHovered(null)}>
+          <line x1="58" y1="150" x2="242" y2="150" stroke={col("chest")} strokeWidth={w("chest")} markerEnd="url(#arro)" markerStart="url(#arro)" />
+          <rect x="100" y="138" width="100" height="16" fill="white" />
+          <text x="150" y="149" textAnchor="middle" fontSize="9" fill={col("chest")} fontFamily="sans-serif" fontWeight={hovered==="chest" ? "600" : "400"}>
+            CHEST {hovered==="chest" ? `· ${fmt(m.chest)}` : "?"}
+          </text>
+        </g>
+
+        {/* LENGTH */}
+        <g className="cursor-pointer" onMouseEnter={() => setHovered("length")} onMouseLeave={() => setHovered(null)}>
+          <line x1="28" y1="80" x2="28" y2="262" stroke={col("length")} strokeWidth={w("length")} markerEnd="url(#arro)" markerStart="url(#arro)" />
+          <rect x="0" y="158" width="56" height="16" fill="white" />
+          <text x="28" y="169" textAnchor="middle" fontSize="9" fill={col("length")} fontFamily="sans-serif" fontWeight={hovered==="length" ? "600" : "400"}>
+            {hovered==="length" ? fmt(m.length) : "LENGTH ?"}
+          </text>
+        </g>
+
+        {/* SLEEVE */}
+        <g className="cursor-pointer" onMouseEnter={() => setHovered("sleeve")} onMouseLeave={() => setHovered(null)}>
+          <line x1="218" y1="65" x2="272" y2="80" stroke={col("sleeve")} strokeWidth={w("sleeve")} markerEnd="url(#arro)" markerStart="url(#arro)" />
+          <rect x="234" y="60" width="56" height="16" fill="white" />
+          <text x="262" y="71" textAnchor="middle" fontSize="9" fill={col("sleeve")} fontFamily="sans-serif" fontWeight={hovered==="sleeve" ? "600" : "400"}>
+            {hovered==="sleeve" ? fmt(m.sleeve) : "SLEEVE ?"}
+          </text>
+        </g>
+
+        <defs>
+          <marker id="arro" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
             <path d="M0,0 L0,6 L6,3 Z" fill="#999" />
           </marker>
         </defs>
@@ -293,6 +375,7 @@ interface DiagramProps {
 
 const CATEGORY_FIELDS: Record<ProductCategory, { keys: MeasurementKey[]; data: Record<string, Record<string, number>> }> = {
   tops:      { keys: ["shoulder","chest","length","sleeve"], data: TOPS_CM },
+  outerwear: { keys: ["shoulder","chest","length","sleeve"], data: OUTERWEAR_CM },
   bottoms:   { keys: ["waist","hip","inseam","length"],      data: BOTTOMS_CM },
   hats:      { keys: ["circumference"],                      data: HATS_CM },
   underwear: { keys: ["waist","hip"],                        data: UNDERWEAR_CM },
@@ -370,6 +453,7 @@ export default function SizeGuideModal({ open, onClose, defaultSize = "M", produ
             </div>
 
             {productCategory === "tops"      && <TopsDiagram      size={size} unit={unit} hovered={hovered} setHovered={setHovered} />}
+            {productCategory === "outerwear" && <OuterwearDiagram size={size} unit={unit} hovered={hovered} setHovered={setHovered} />}
             {productCategory === "bottoms"   && <BottomsDiagram   size={size} unit={unit} hovered={hovered} setHovered={setHovered} />}
             {productCategory === "hats"      && <HatsDiagram      size={size} unit={unit} hovered={hovered} setHovered={setHovered} />}
             {productCategory === "underwear" && <UnderwearDiagram size={size} unit={unit} hovered={hovered} setHovered={setHovered} />}
@@ -469,8 +553,8 @@ export default function SizeGuideModal({ open, onClose, defaultSize = "M", produ
               </div>
             )}
 
-            {/* Fit Predictor — tops only */}
-            {productCategory === "tops" && (
+            {/* Fit Predictor — tops and outerwear */}
+            {(productCategory === "tops" || productCategory === "outerwear") && (
               <div className="mt-6 border-t border-gray-100 pt-5">
                 <p className="text-[10px] font-bold uppercase tracking-widest mb-3">Fit Predictor</p>
                 <p className="text-[11px] text-gray-500 mb-3">Tell us what you wear in another brand</p>
